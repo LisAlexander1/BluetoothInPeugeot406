@@ -10,8 +10,10 @@ struct SignalFormat
 class Button
 {
 private:
-    Timer* controlTimer;
-    Timer* buttonTimer;
+    char *name;
+    Timer *controlTimer;
+    Timer *buttonTimer;
+    Timer *delayTimer;
 
     uint8_t buttonPin;
     uint8_t controlPin;
@@ -22,7 +24,7 @@ private:
     bool prevButtonState = false;
 
 public:
-    Button(uint8_t buttonPin, uint8_t controlPin, SignalFormat buttonSignal, SignalFormat controlSignal);
+    Button(uint8_t buttonPin, uint8_t controlPin, SignalFormat buttonSignal, SignalFormat controlSignal, char *name);
     void init();
     void tick();
     void click();

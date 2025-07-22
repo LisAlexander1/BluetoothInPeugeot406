@@ -4,22 +4,24 @@ Button::Button(
     uint8_t buttonPin,
     uint8_t controlPin,
     SignalFormat buttonSignal,
-    SignalFormat controlSignal) : buttonPin(buttonPin), controlPin(controlPin), buttonSignal(buttonSignal), controlSignal(controlSignal)
+    SignalFormat controlSignal,
+    char* name) : buttonPin(buttonPin), controlPin(controlPin), buttonSignal(buttonSignal), controlSignal(controlSignal), name(name)
 {
     controlTimer = new Timer(controlSignal.duration, controlSignal.startDelay);
     buttonTimer = new Timer(buttonSignal.duration, buttonSignal.startDelay);
+    delayTimer = new Timer(1000);
 }
 
 void Button::tick()
 {
-    // Serial.println(digitalRead(buttonPin));
-    if (!prevButtonState && !isOutput && digitalRead(buttonPin))
+    if (!prevButtonState && !isOutput && delayTimer->isExpired() && digitalRead(buttonPin) )
     {
-        Serial.println("Next");
         controlTimer->start();
         buttonTimer->start();
+        delayTimer->start();
         isOutput = true;
         pinMode(buttonPin, OUTPUT);
+        Serial.println(name);
     }
 
     if (isOutput)
@@ -47,6 +49,7 @@ void Button::tick()
 
     prevButtonState = digitalRead(buttonPin);
 }
+
 
 void Button::click()
 {
